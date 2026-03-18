@@ -40,8 +40,9 @@ def save_history(cleaned_data, result):
             decision=result["decision"],
             risk=result["risk"],
         )
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"Erreur save_history: {e}")
+        raise
 
 
 def get_filtered_queryset(request):
