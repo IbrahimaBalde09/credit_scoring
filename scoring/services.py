@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ARTIFACTS_DIR = BASE_DIR / "artifacts"
 MODEL_PATH = ARTIFACTS_DIR / "model.joblib"
 POLICY_PATH = ARTIFACTS_DIR / "policy.json"
-MODEL_URL = "https://drive.google.com/uc?export=download&id=1ABCxyz12345"
+MODEL_URL = "https://drive.google.com/uc?export=download&id=1zcdFLHEi2fZ59BvTpb2osfRQ2B8pvJxG"
 
 DISPLAY_NAMES = {
     "loan_amnt": "Montant du prêt",
