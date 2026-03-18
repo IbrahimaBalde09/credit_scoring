@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<title>Plateforme Credit Scoring</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+font-family:Arial, sans-serif;
+background:#0f2a44;
+margin:0;
+color:white;
+}
+h1{
+text-align:center;
+margin-top:30px;
+}
+.top-links{
+text-align:center;
+margin-bottom:20px;
+}
+.top-links a{
+background:#1d3f5e;
+color:white;
+text-decoration:none;
+padding:10px 15px;
+border-radius:8px;
+}
+.container{
+display:flex;
+gap:40px;
+padding:40px;
+justify-content:center;
+align-items:flex-start;
+}
+.card{
+background:white;
+color:black;
+padding:30px;
+border-radius:14px;
+width:40%;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+.result-card{
+background:#e8f0f5;
+color:black;
+padding:30px;
+border-radius:14px;
+width:35%;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+button{
+background:#1d3f5e;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:8px;
+cursor:pointer;
+}
+button:hover{
+background:#143048;
+}
+.badge{
+padding:6px 12px;
+border-radius:999px;
+font-weight:bold;
+color:white;
+}
+.accept{background:#2ecc71;}
+.review{background:#f39c12;}
+.reject{background:#e74c3c;}
+.risk-bar{
+background:#ddd;
+height:12px;
+border-radius:10px;
+margin-top:10px;
+margin-bottom:20px;
+overflow:hidden;
+}
+.alert-warning{
+background:#ffeeba;
+color:black;
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+}
+.alert-error{
+background:#ffb3b3;
+color:black;
+padding:10px;
+border-radius:8px;
+margin-bottom:15px;
+}
+.section-title{
+margin-top:25px;
+margin-bottom:10px;
+}
+canvas{
+max-width:200px;
+display:block;
+margin:auto;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Plateforme de Credit Scoring</h1>
+
+<div class="top-links">
+<a href="/dashboard/">Voir le dashboard</a>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Informations du dossier</h2>
+
+<form method="post">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Calculer le score</button>
+</form>
+
+</div>
+
+<div class="result-card">
+
+<h2>Résultat</h2>
+
+{% if not model_available %}
+<div class="alert-warning">
+Le modèle n'est pas disponible. Ajoute <b>artifacts/model.joblib</b>.
+</div>
+{% endif %}
+
+{% if error_message %}
+<div class="alert-error">
+{{ error_message }}
+</div>
+{% endif %}
+
+{% if result %}
+<h3>Probabilité de défaut : {{ result.prob }} %</h3>
+
+<div class="risk-bar">
+<div style="
+width: {{ result.prob }}%;
+height:12px;
+border-radius:10px;
+background:
+{% if result.decision == 'ACCEPT' %}
+#2ecc71
+{% elif result.decision == 'REVIEW' %}
+#f39c12
+{% else %}
+#e74c3c
+{% endif %}
+;"></div>
+</div>
+
+<p><b>Numéro client :</b> {{ form.client_number.value }}</p>
+
+<p>
+Décision :
+{% if result.decision == "ACCEPT" %}
+<span class="badge accept">{{ result.decision_fr }}</span>
+{% elif result.decision == "REVIEW" %}
+<span class="badge review">{{ result.decision_fr }}</span>
+{% else %}
+<span class="badge reject">{{ result.decision_fr }}</span>
+{% endif %}
+</p>
+
+<p><b>Niveau de risque :</b> {{ result.risk }}</p>
+<p>{{ result.interpretation }}</p>
+
+<canvas id="riskChart"></canvas>
+
+<script>
+var prob = {{ result.prob }};
+new Chart(document.getElementById("riskChart"),{
+type:"doughnut",
+data:{
+datasets:[{
+data:[prob,100-prob],
+backgroundColor:[
+"{% if result.decision == 'ACCEPT' %}#2ecc71{% elif result.decision == 'REVIEW' %}#f39c12{% else %}#e74c3c{% endif %}",
+"#ecf0f1"
+]
+}]
+},
+options:{
+plugins:{legend:{display:false}},
+cutout:"70%"
+}
+});
+</script>
+
+<h3 class="section-title">Facteurs défavorables</h3>
+<ul>
+{% for f in result.neg %}
+<li>{{ f }}</li>
+{% endfor %}
+</ul>
+
+<h3 class="section-title">Facteurs favorables</h3>
+<ul>
+{% for f in result.pos %}
+<li>{{ f }}</li>
+{% endfor %}
+</ul>
+
+<h3 class="section-title">Seuils de décision</h3>
+<ul>
+<li>Acceptation : &lt; {{ result.thresholds.accept }} %</li>
+<li>Revue : {{ result.thresholds.accept }} - {{ result.thresholds.reject }} %</li>
+<li>Rejet : ≥ {{ result.thresholds.reject }} %</li>
+</ul>
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Credit Scoring Platform{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'scoring/ui.css' %}">
+</head>
+
+<body>
+  <div class="bg">
+    <div class="noise"></div>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</body>
+</html>

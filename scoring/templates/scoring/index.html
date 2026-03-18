@@ -1,0 +1,144 @@
+{% extends "scoring/base.html" %}
+{% block title %}Plateforme de Credit Scoring{% endblock %}
+
+{% block content %}
+
+<!-- TITRE CENTRÉ -->
+<div class="page-title">
+  <h1>Plateforme de Credit Scoring</h1>
+  <p>Décision automatique : Acceptation • Revue • Rejet</p>
+</div>
+
+<div class="stage">
+
+  <!-- MAIN CARD -->
+  <section class="panel">
+    <div class="panel-head">
+      <div class="panel-left">
+        <div class="search-chip" title="Recherche"></div>
+      </div>
+
+      <div class="panel-right">
+        <span class="selected">Dossier en cours</span>
+      </div>
+    </div>
+
+    <form method="post" class="panel-body">
+      {% csrf_token %}
+
+      <div class="grid">
+        <div class="field">
+          <label>{{ form.loan_amnt.label }}</label>
+          {{ form.loan_amnt }}
+          {% if form.loan_amnt.errors %}<div class="error">{{ form.loan_amnt.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.person_income.label }}</label>
+          {{ form.person_income }}
+          {% if form.person_income.errors %}<div class="error">{{ form.person_income.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.loan_int_rate.label }}</label>
+          {{ form.loan_int_rate }}
+          {% if form.loan_int_rate.errors %}<div class="error">{{ form.loan_int_rate.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.loan_grade.label }}</label>
+          {{ form.loan_grade }}
+          {% if form.loan_grade.errors %}<div class="error">{{ form.loan_grade.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.loan_percent_income.label }}</label>
+          {{ form.loan_percent_income }}
+          {% if form.loan_percent_income.errors %}<div class="error">{{ form.loan_percent_income.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.person_age.label }}</label>
+          {{ form.person_age }}
+          {% if form.person_age.errors %}<div class="error">{{ form.person_age.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.person_emp_length.label }}</label>
+          {{ form.person_emp_length }}
+          {% if form.person_emp_length.errors %}<div class="error">{{ form.person_emp_length.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.person_home_ownership.label }}</label>
+          {{ form.person_home_ownership }}
+          {% if form.person_home_ownership.errors %}<div class="error">{{ form.person_home_ownership.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.loan_intent.label }}</label>
+          {{ form.loan_intent }}
+          {% if form.loan_intent.errors %}<div class="error">{{ form.loan_intent.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.cb_person_default_on_file.label }}</label>
+          {{ form.cb_person_default_on_file }}
+          {% if form.cb_person_default_on_file.errors %}<div class="error">{{ form.cb_person_default_on_file.errors|striptags }}</div>{% endif %}
+        </div>
+
+        <div class="field">
+          <label>{{ form.cb_person_cred_hist_length.label }}</label>
+          {{ form.cb_person_cred_hist_length }}
+          {% if form.cb_person_cred_hist_length.errors %}<div class="error">{{ form.cb_person_cred_hist_length.errors|striptags }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="bottom-row">
+        <button class="primary" type="submit">Calculer le score</button>
+
+        <!-- ZONE GRAPHIQUE -->
+        <div class="chart-card">
+          <div class="chart-title">Probabilité de défaut</div>
+
+          <!-- valeurs par défaut si pas de résultat -->
+          {% if result %}
+            <div class="chart-big">{{ result.p_default|floatformat:2 }}%</div>
+            <div class="chart-sub">
+              Décision : <span class="badge badge-{{ result.decision|lower }}">{{ result.decision }}</span>
+            </div>
+
+            <!-- Donut chart via CSS conic-gradient -->
+            <div class="donut"
+                 style="--p: {{ result.p_default|floatformat:2 }};">
+              <div class="donut-center">
+                <div class="donut-label">Risque</div>
+                <div class="donut-value">{{ result.p_default|floatformat:2 }}%</div>
+              </div>
+            </div>
+
+          {% else %}
+            <div class="chart-big">—</div>
+            <div class="chart-sub">Soumets un dossier pour voir le résultat</div>
+            <div class="donut" style="--p: 0;">
+              <div class="donut-center">
+                <div class="donut-label">Risque</div>
+                <div class="donut-value">0%</div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="legend">
+            <div class="leg"><span class="dot ok"></span> Acceptation</div>
+            <div class="leg"><span class="dot warn"></span> Revue</div>
+            <div class="leg"><span class="dot bad"></span> Rejet</div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </section>
+
+</div>
+
+{% endblock %}

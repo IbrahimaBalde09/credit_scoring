@@ -1,0 +1,6 @@
+{
+  "t_accept": 0.1,
+  "t_reject": 0.3,
+  "model_name": "XGBoost + OneHotEncoder Pipeline",
+  "target": "loan_status"
+}
