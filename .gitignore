@@ -1,0 +1,33 @@
+# Environnements
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDE
+.idea/
+.vscode/
+
+# Base locale
+db.sqlite3
+
+# Données
+data/
+reports/
+
+# Modèles
+artifacts/*.joblib
+models/*.joblib
+artifacts/*.pkl
+models/*.pkl
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.env.*

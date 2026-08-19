@@ -1,0 +1,27 @@
+# --- Framework web ---
+Django==5.1.7
+gunicorn==23.0.0
+whitenoise==6.9.0
+
+# --- Base de données ---
+dj-database-url==2.3.0
+psycopg[binary]==3.2.3
+
+# --- API / sécurité ---
+djangorestframework==3.15.2
+django-cors-headers==4.7.0
+django-ratelimit==4.1.0
+
+# --- ML ---
+joblib==1.4.2
+numpy==1.26.4
+pandas==2.2.3
+scikit-learn==1.5.2
+xgboost==2.1.1
+shap==0.46.0
+
+# --- Rapports ---
+reportlab==4.2.5
+
+# --- Observabilité (optionnel, activé si SENTRY_DSN est défini) ---
+sentry-sdk==2.17.0

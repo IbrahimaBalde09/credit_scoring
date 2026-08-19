@@ -1,0 +1,15 @@
+.git
+.gitignore
+.venv
+venv
+__pycache__
+*.pyc
+db.sqlite3
+staticfiles
+.env
+.env.*
+node_modules
+*.md
+data/*.csv
+reports/figures
+models/*.joblib

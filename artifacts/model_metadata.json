@@ -1,0 +1,25 @@
+{
+  "trained_at_utc": "20260818-204508",
+  "dataset_fingerprint_sha256": "ce3c6d216771",
+  "n_train": 25928,
+  "n_test": 6483,
+  "cv_auc_mean": 0.9315,
+  "cv_auc_std": 0.0026,
+  "test_auc": 0.9271,
+  "test_brier_score": 0.0572,
+  "test_ks_statistic": 0.7269,
+  "policy": {
+    "t_accept": 0.09,
+    "t_reject": 0.2,
+    "accept_rate": 0.5806,
+    "review_rate": 0.2203,
+    "reject_rate": 0.1991,
+    "accepted_default_rate": 0.0396,
+    "rejected_default_rate": 0.8404,
+    "accepted_count": 3764,
+    "review_count": 1428,
+    "rejected_count": 1291
+  },
+  "version": "xgb-calibrated-20260818-204508",
+  "sha256": "988d4d60bc9c050a6c0cf4bc169b6f5268475d6f59fcba59b61f82b47f7aa18d"
+}

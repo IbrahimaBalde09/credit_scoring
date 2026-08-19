@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Credit Scoring Platform</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111a2e;
+      --muted:#9fb0d0;
+      --text:#e7eefc;
+      --accent:#4f8cff;
+      --ok:#26c281;
+      --warn:#f5c542;
+      --bad:#ff5c6c;
+      --border:rgba(255,255,255,.09);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(79,140,255,.28), transparent 60%),
+        radial-gradient(1000px 500px at 90% 0%, rgba(38,194,129,.18), transparent 60%),
+        var(--bg);
+    }
+    a{color:inherit; text-decoration:none}
+    .app{min-height:100vh; display:flex}
+    .sidebar{
+      width:280px; padding:22px;
+      border-right:1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex; align-items:center; gap:12px; margin-bottom:18px}
+    .logo{
+      width:44px;height:44px; border-radius:14px;
+      display:grid; place-items:center;
+      background:rgba(79,140,255,.16);
+      border:1px solid var(--border);
+      font-size:20px;
+    }
+    .brand h1{margin:0; font-size:16px}
+    .brand p{margin:4px 0 0 0; color:var(--muted); font-size:12px}
+
+    .nav{margin-top:16px; display:grid; gap:8px}
+    .nav a{
+      padding:10px 12px; border-radius:12px;
+      border:1px solid transparent;
+      color:var(--muted);
+      display:flex; gap:10px; align-items:center;
+    }
+    .nav a.active{
+      color:var(--text);
+      background:rgba(255,255,255,.04);
+      border-color:var(--border);
+    }
+    .pill{
+      margin-top:18px;
+      padding:12px; border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+    }
+    .pill .k{color:var(--muted); font-size:12px}
+    .pill .v{font-weight:700; font-size:14px; margin-top:6px}
+    .pill .row{display:flex; gap:10px; margin-top:10px}
+    .pill .chip{
+      padding:6px 10px; border-radius:999px; font-size:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+    }
+
+    .main{flex:1; padding:24px}
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:14px 16px; border-radius:var(--radius);
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      box-shadow: var(--shadow);
+    }
+    .search{
+      width:420px; max-width:55vw;
+      display:flex; gap:10px; align-items:center;
+      border:1px solid var(--border);
+      background:rgba(8,12,20,.55);
+      padding:10px 12px; border-radius:14px;
+      color:var(--muted);
+    }
+    .search input{
+      width:100%;
+      background:transparent;
+      border:0; outline:0;
+      color:var(--text);
+    }
+    .user{
+      display:flex; gap:12px; align-items:center;
+    }
+    .avatar{
+      width:36px; height:36px; border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(79,140,255,.18);
+      display:grid; place-items:center;
+    }
+
+    .grid{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .sidebar{display:none}
+      .grid{grid-template-columns:1fr}
+      .search{width:100%}
+    }
+
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    .card h2{margin:0 0 12px 0; font-size:15px}
+    .muted{color:var(--muted); font-size:12px}
+
+    .kpis{display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-top:14px}
+    @media (max-width: 980px){ .kpis{grid-template-columns: repeat(2, 1fr);} }
+    .kpi{
+      padding:12px; border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.14);
+    }
+    .kpi .k{color:var(--muted); font-size:12px}
+    .kpi .v{margin-top:6px; font-size:18px; font-weight:800}
+
+    .form-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    @media (max-width: 720px){ .form-grid{grid-template-columns:1fr} }
+    label{display:block; color:var(--muted); font-size:12px; margin-bottom:6px}
+    input, select{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(8,12,20,.55);
+      color: var(--text);
+      outline:none;
+    }
+    input:focus, select:focus{border-color: rgba(79,140,255,.65)}
+
+    .btn{
+      margin-top:14px;
+      padding:10px 14px;
+      border-radius:12px;
+      border:1px solid rgba(79,140,255,.45);
+      background: rgba(79,140,255,.18);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn:hover{background: rgba(79,140,255,.26)}
+
+    .result{
+      display:grid; gap:12px;
+    }
+    .metric{
+      padding:12px; border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.14);
+    }
+    .metric .k{color:var(--muted); font-size:12px}
+    .metric .v{margin-top:6px; font-size:18px; font-weight:800}
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px; font-weight:700;
+      border:1px solid var(--border);
+    }
+    .accept{background: rgba(38,194,129,.16); border-color: rgba(38,194,129,.35)}
+    .review{background: rgba(245,197,66,.14); border-color: rgba(245,197,66,.35)}
+    .reject{background: rgba(255,92,108,.14); border-color: rgba(255,92,108,.35)}
+
+    .bar{
+      height:10px; border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.08);
+      overflow:hidden;
+    }
+    .bar > div{
+      height:100%;
+      width:42%;
+      background: linear-gradient(90deg, rgba(79,140,255,.9), rgba(255,92,108,.9));
+    }
+
+    table{width:100%; border-collapse:collapse; margin-top:10px}
+    th, td{padding:10px; border-bottom:1px solid var(--border); text-align:left; font-size:12px}
+    th{color:var(--muted); font-weight:600}
+  </style>
+</head>
+
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">💳</div>
+      <div>
+        <h1>Risk Engine</h1>
+        <p>Credit Scoring Platform</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="active" href="#">🏠 Dashboard</a>
+      <a href="#">🧾 Scoring</a>
+      <a href="#">📂 Batch scoring</a>
+      <a href="#">📈 Monitoring</a>
+      <a href="#">⚙️ Settings</a>
+    </nav>
+
+    <div class="pill">
+      <div class="k">Policy</div>
+      <div class="v">t_accept = 0.10 • t_reject = 0.30</div>
+      <div class="row">
+        <div class="chip">ACCEPT</div>
+        <div class="chip">REVIEW</div>
+        <div class="chip">REJECT</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div style="font-weight:800">Plateforme Credit Scoring</div>
+        <div class="muted">Décision instantanée + explication du risque</div>
+      </div>
+      <div class="user">
+        <div class="search">
+          🔎 <input placeholder="Rechercher un dossier, un ID, un client…" />
+        </div>
+        <div class="avatar">RB</div>
+      </div>
+    </div>
+
+    <!-- KPI row -->
+    <div class="kpis">
+      <div class="kpi"><div class="k">AUC (XGBoost)</div><div class="v">0.94</div></div>
+      <div class="kpi"><div class="k">Accept rate</div><div class="v">60%</div></div>
+      <div class="kpi"><div class="k">Review rate</div><div class="v">20%</div></div>
+      <div class="kpi"><div class="k">Accepted default</div><div class="v">3.14%</div></div>
+    </div>
+
+    <div class="grid">
+      <!-- FORM -->
+      <section class="card">
+        <h2>🧾 Nouveau scoring</h2>
+        <p class="muted">Saisis les informations et calcule le score de défaut.</p>
+
+        <div class="form-grid" style="margin-top:12px">
+          <div>
+            <label>Âge</label>
+            <input type="number" value="30" />
+          </div>
+          <div>
+            <label>Revenu annuel</label>
+            <input type="number" value="55000" />
+          </div>
+          <div>
+            <label>Logement</label>
+            <select>
+              <option>RENT</option><option>OWN</option><option>MORTGAGE</option><option>OTHER</option>
+            </select>
+          </div>
+          <div>
+            <label>Ancienneté emploi</label>
+            <input type="number" value="4" />
+          </div>
+
+          <div>
+            <label>Intention prêt</label>
+            <select>
+              <option>PERSONAL</option><option>EDUCATION</option><option>MEDICAL</option>
+              <option>HOMEIMPROVEMENT</option><option>DEBTCONSOLIDATION</option><option>VENTURE</option>
+            </select>
+          </div>
+          <div>
+            <label>Grade</label>
+            <select>
+              <option>A</option><option>B</option><option selected>C</option><option>D</option><option>E</option><option>F</option><option>G</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Montant prêt</label>
+            <input type="number" value="8000" />
+          </div>
+          <div>
+            <label>Taux intérêt</label>
+            <input type="number" value="11" step="0.1"/>
+          </div>
+
+          <div>
+            <label>% revenu engagé</label>
+            <input type="number" value="0.15" step="0.01"/>
+          </div>
+          <div>
+            <label>Défaut historique</label>
+            <select>
+              <option selected>N</option><option>Y</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Historique crédit (années)</label>
+            <input type="number" value="4" />
+          </div>
+        </div>
+
+        <button class="btn">Calculer le score</button>
+      </section>
+
+      <!-- RESULT -->
+      <section class="card">
+        <h2>📊 Résultat</h2>
+        <div class="result">
+          <div class="metric">
+            <div class="k">Probabilité de défaut</div>
+            <div class="v">4.39%</div>
+          </div>
+
+          <div class="metric">
+            <div class="k">Décision</div>
+            <div class="v">
+              <span class="badge accept">ACCEPT</span>
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="k">Niveau de risque</div>
+            <div class="bar"><div></div></div>
+            <div class="muted" style="margin-top:8px">Policy : &lt;0.10 ACCEPT • ≥0.30 REJECT</div>
+          </div>
+
+          <div class="metric">
+            <div class="k">Top facteurs (exemple)</div>
+            <div class="muted">loan_int_rate ↑, loan_percent_income ↑, cb_default_on_file=Y</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- History -->
+    <section class="card" style="margin-top:16px">
+      <h2>🕒 Historique des scorings</h2>
+      <p class="muted">Dernières décisions (exemple).</p>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Date</th><th>Proba défaut</th><th>Décision</th><th>Montant</th><th>Grade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>#10231</td><td>2026-02-12</td><td>0.04</td><td><span class="badge accept">ACCEPT</span></td><td>8 000</td><td>C</td></tr>
+          <tr><td>#10230</td><td>2026-02-12</td><td>0.18</td><td><span class="badge review">REVIEW</span></td><td>12 000</td><td>D</td></tr>
+          <tr><td>#10229</td><td>2026-02-11</td><td>0.62</td><td><span class="badge reject">REJECT</span></td><td>15 000</td><td>E</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+</div>
+</body>
+</html>
