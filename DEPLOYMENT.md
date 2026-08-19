@@ -45,7 +45,13 @@ tu contrôles entièrement la base Postgres et le réseau.
 
 ## Option B — Render (PaaS, le plus rapide pour une démo/POC)
 
-Le projet inclut un blueprint `render.yaml` prêt à l'emploi.
+Le projet inclut un blueprint `render.yaml` prêt à l'emploi, configuré sur
+le **plan gratuit** (pas de carte bancaire nécessaire).
+
+⚠️ Limites du plan gratuit à connaître : le service web se met en veille
+après 15 minutes d'inactivité (redémarre en 30-60s au prochain accès), et
+la base Postgres gratuite expire après 90 jours (à recréer, ou à passer
+sur un plan payant avant l'échéance si le projet devient réel).
 
 1. Pousser le code sur un dépôt Git (GitHub/GitLab).
 2. Sur [render.com](https://render.com) : **New > Blueprint**, sélectionner

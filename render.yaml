@@ -1,11 +1,18 @@
 # Blueprint Render (https://render.com/docs/blueprint-spec)
 # Déploiement : Render Dashboard > New > Blueprint > pointer sur ce repo.
+#
+# Plans "free" pour démarrer sans carte bancaire ni frais. Limites à connaître :
+# - Web service gratuit : se met en veille après 15 min d'inactivité (redémarre
+#   en 30-60s au prochain accès), 750h/mois.
+# - Postgres gratuit : 256 Mo, expire après 90 jours (à recréer ensuite, ou à
+#   passer sur un plan payant avant l'expiration si le projet devient réel).
+# Passer plan: free -> plan: starter plus tard si besoin d'un service "always-on".
 services:
   - type: web
     name: credit-scoring-platform
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter
+    plan: free
     healthCheckPath: /healthz/
     envVars:
       - key: SECRET_KEY
@@ -27,5 +34,5 @@ services:
 
 databases:
   - name: credit-scoring-db
-    plan: starter
+    plan: free
     postgresMajorVersion: 16
